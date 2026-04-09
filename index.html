@@ -104,3 +104,125 @@
 
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gin & Us</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;600&display=swap');
+
+        body { 
+            background: linear-gradient(135deg, #064e3b 0%, #022c22 100%); 
+            display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; 
+            font-family: 'Poppins', sans-serif; color: #FDFDD0;
+        }
+        
+        .app-container { 
+            background: rgba(2, 44, 34, 0.85); backdrop-filter: blur(15px);
+            padding: 30px 20px; border-radius: 40px; text-align: center; 
+            width: 85%; max-width: 400px; border: 1px solid rgba(253, 253, 208, 0.2); 
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6); 
+        }
+
+        /* Gin the Kitten Styles */
+        .kitten-box { background: rgba(253, 253, 208, 0.1); border-radius: 20px; padding: 20px; margin-bottom: 20px; }
+        #kitten-emoji { font-size: 80px; display: block; margin: 10px 0; transition: 0.3s; }
+        .stats { font-size: 0.8rem; margin-bottom: 10px; }
+        
+        /* Buttons */
+        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        button { 
+            background: #10b981; color: #FDFDD0; border: none; padding: 12px; 
+            border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 0.9rem;
+        }
+        button:active { transform: scale(0.95); }
+        .ping-btn { background: #FDFDD0; color: #064e3b; width: 100%; margin-top: 10px; font-family: 'Dancing Script', cursive; font-size: 1.5rem; }
+
+        /* Messaging */
+        input { 
+            width: 80%; background: rgba(253, 253, 208, 0.1); border: 1px solid #FDFDD0; 
+            padding: 10px; border-radius: 10px; color: #FDFDD0; margin-top: 10px;
+        }
+        .user-select { margin-bottom: 15px; font-size: 0.8rem; }
+        select { background: transparent; color: #FDFDD0; border: 1px solid #FDFDD0; border-radius: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="user-select">
+        I am: <select id="userSelect"><option value="xena">Xena</option><option value="dylan">Dylan</option></select>
+    </div>
+
+    <div class="kitten-box">
+        <span id="kitten-emoji">🐈‍⬛</span>
+        <h2 style="margin:0; color:#FFA500;">Gin</h2>
+        <div class="stats">Hunger: <span id="hunger">100</span>% | Love: <span id="love">100</span>%</div>
+        <div class="btn-grid">
+            <button onclick="careKitten('feed')">🍖 Feed Gin</button>
+            <button onclick="careKitten('pet')">✋ Pet Gin</button>
+        </div>
+    </div>
+
+    <input type="text" id="msgInput" placeholder="Type a message...">
+    <button class="ping-btn" onclick="sendCommunication()">Send Signal</button>
+    <p id="status" style="font-size: 0.7rem; margin-top: 10px;"></p>
+</div>
+
+<script>
+    // 1. Kitten Logic (Local Storage)
+    let hunger = localStorage.getItem('ginHunger') || 100;
+    let love = localStorage.getItem('ginLove') || 100;
+
+    function updateKittenDisplay() {
+        document.getElementById('hunger').innerText = hunger;
+        document.getElementById('love').innerText = love;
+        const emoji = document.getElementById('kitten-emoji');
+        // Orange Kitten logic
+        emoji.innerText = "🐈"; 
+        emoji.style.color = "#FFA500"; 
+        if (hunger < 30) emoji.innerText = "😿";
+    }
+
+    function careKitten(type) {
+        if(type === 'feed') hunger = Math.min(100, parseInt(hunger) + 20);
+        if(type === 'pet') love = Math.min(100, parseInt(love) + 20);
+        localStorage.setItem('ginHunger', hunger);
+        localStorage.setItem('ginLove', love);
+        updateKittenDisplay();
+        document.getElementById('status').innerText = "Gin is happy! ✨";
+    }
+
+    // 2. Messaging & Ping Logic
+    function sendCommunication() {
+        const user = document.getElementById('userSelect').value;
+        const msg = document.getElementById('msgInput').value;
+        const status = document.getElementById('status');
+        
+        // If message is empty, it's just a "Miss You" ping
+        const finalMsg = msg ? `${user.toUpperCase()}: ${msg}` : `${user.toUpperCase()} misses you! ❤️`;
+        const targetTopic = (user === "xena") ? "dylan_alerts_2026" : "xena_alerts_2026";
+
+        fetch(`https://ntfy.sh/${targetTopic}`, {
+            method: 'POST',
+            body: finalMsg,
+            headers: { 'Title': 'New Heartbeat' }
+        }).then(() => {
+            status.innerText = "Message & Heartbeat Sent!";
+            document.getElementById('msgInput').value = "";
+        });
+    }
+
+    // Auto-decrease hunger over time (Simulation)
+    setInterval(() => {
+        hunger = Math.max(0, hunger - 1);
+        updateKittenDisplay();
+    }, 60000); // Drops 1% every minute
+
+    updateKittenDisplay();
+</script>
+
+</body>
+</html>
