@@ -293,3 +293,70 @@
 
     updateKittenDisplay();
 </script>
+<script>
+    // 1. Kitten Logic (Local Storage)
+    // This saves Gin's stats on your specific phone
+    let hunger = localStorage.getItem('ginHunger') || 100;
+    let love = localStorage.getItem('ginLove') || 100;
+
+    function updateKittenDisplay() {
+        document.getElementById('hunger').innerText = hunger;
+        document.getElementById('love').innerText = love;
+        const emoji = document.getElementById('kitten-emoji');
+        
+        // Orange Kitten (Gin)
+        emoji.innerText = "🐈"; 
+        emoji.style.color = "#FFA500"; 
+        
+        if (hunger < 30) {
+            emoji.innerText = "😿"; // Gin gets sad when hungry
+        }
+    }
+
+    function careKitten(type) {
+        if(type === 'feed') hunger = Math.min(100, parseInt(hunger) + 20);
+        if(type === 'pet') love = Math.min(100, parseInt(love) + 20);
+        
+        localStorage.setItem('ginHunger', hunger);
+        localStorage.setItem('ginLove', love);
+        updateKittenDisplay();
+        document.getElementById('status').innerText = "Gin purrs... ✨";
+    }
+
+    // 2. FIXED Messaging & Ping Logic
+    function sendCommunication() {
+        const userSelect = document.getElementById('userSelect');
+        const currentUser = userSelect.value; // Checks if Dylan or Xena is selected
+        const msgInput = document.getElementById('msgInput');
+        const status = document.getElementById('status');
+        
+        // This is the fix: It creates the message based on who is selected
+        let name = currentUser.charAt(0).toUpperCase() + currentUser.slice(1);
+        let finalMsg = msgInput.value ? `${name}: ${msgInput.value}` : `${name} misses you! ❤️`;
+
+        // Logic: Send to the OTHER person's topic
+        // If Dylan sends it, it goes to Xena's alerts. If Xena sends it, it goes to Dylan's.
+        const targetTopic = (currentUser === "xena") ? "dylan_alerts_2026" : "xena_alerts_2026";
+
+        fetch(`https://ntfy.sh/${targetTopic}`, {
+            method: 'POST',
+            body: finalMsg,
+            headers: { 'Title': 'New Signal' }
+        }).then(response => {
+            if (response.ok) {
+                status.innerText = "Signal Sent to " + (currentUser === "xena" ? "Dylan" : "Xena") + "! ❤️";
+                msgInput.value = ""; // Clears the box
+            }
+        }).catch(() => {
+            status.innerText = "Error: Check your internet.";
+        });
+    }
+
+    // Hunger simulation: Gin gets a bit hungrier every 2 minutes
+    setInterval(() => {
+        hunger = Math.max(0, hunger - 1);
+        updateKittenDisplay();
+    }, 120000);
+
+    updateKittenDisplay();
+</script>
