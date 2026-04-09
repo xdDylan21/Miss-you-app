@@ -83,3 +83,37 @@
         document.getElementById('love').innerText = love;
         const emoji = document.getElementById('kitten-emoji');
         if (hunger < 30) emoji.innerText = "😿
+function sendCommunication() {
+        const currentUser = document.getElementById('userSelect').value;
+        const msg = document.getElementById('msgInput').value;
+        const status = document.getElementById('status');
+        
+        let senderName = currentUser.charAt(0).toUpperCase() + currentUser.slice(1);
+        let receiverName = (currentUser === "dylan") ? "Xena" : "Dylan";
+        let finalMsg = msg ? `${senderName}: ${msg}` : `${senderName} misses you! ❤️`;
+
+        const targetTopic = (currentUser === "dylan") ? "xena_alerts_2026" : "dylan_alerts_2026";
+
+        // DEBUG LOG: This helps us see if the button is even firing
+        console.log("Attempting to send to:", targetTopic);
+
+        fetch(`https://ntfy.sh/${targetTopic}`, {
+            method: 'POST',
+            body: finalMsg,
+            headers: { 'Title': 'New Heartbeat' }
+        })
+        .then(response => {
+            if (response.ok) {
+                status.innerText = "Sent to " + receiverName + "! Check her phone.";
+                document.getElementById('msgInput').value = "";
+            } else {
+                // If the server says NO
+                alert("Server error: " + response.status);
+            }
+        })
+        .catch((error) => {
+            // If the internet or browser blocks it
+            alert("Network Error: " + error.message);
+            status.innerText = "Connection blocked by browser.";
+        });
+    }
