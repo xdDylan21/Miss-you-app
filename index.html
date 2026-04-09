@@ -360,3 +360,97 @@
 
     updateKittenDisplay();
 </script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gin & Us</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;600&display=swap');
+        body { background: linear-gradient(135deg, #064e3b 0%, #022c22 100%); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; font-family: 'Poppins', sans-serif; color: #FDFDD0; }
+        .app-container { background: rgba(2, 44, 34, 0.85); backdrop-filter: blur(15px); padding: 30px 20px; border-radius: 40px; text-align: center; width: 85%; max-width: 400px; border: 1px solid rgba(253, 253, 208, 0.2); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6); }
+        .kitten-box { background: rgba(253, 253, 208, 0.1); border-radius: 20px; padding: 20px; margin-bottom: 20px; }
+        #kitten-emoji { font-size: 80px; display: block; margin: 10px 0; color: #FFA500; }
+        .stats { font-size: 0.8rem; margin-bottom: 10px; }
+        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        button { background: #10b981; color: #FDFDD0; border: none; padding: 12px; border-radius: 12px; font-weight: 600; cursor: pointer; }
+        .ping-btn { background: #FDFDD0; color: #064e3b; width: 100%; margin-top: 10px; font-family: 'Dancing Script', cursive; font-size: 1.5rem; }
+        input { width: 85%; background: rgba(253, 253, 208, 0.1); border: 1px solid #FDFDD0; padding: 10px; border-radius: 10px; color: #FDFDD0; margin-top: 10px; text-align: center; }
+        .user-select { margin-bottom: 15px; font-size: 0.9rem; font-weight: 600; }
+        select { background: #064e3b; color: #FDFDD0; border: 1px solid #FDFDD0; padding: 5px 10px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="user-select">
+        I am: 
+        <select id="userSelect">
+            <option value="dylan">Dylan</option>
+            <option value="xena">Xena</option>
+        </select>
+    </div>
+
+    <div class="kitten-box">
+        <span id="kitten-emoji">🐈</span>
+        <h2 style="margin:0; color:#FFA500;">Gin</h2>
+        <div class="stats">Hunger: <span id="hunger">100</span>% | Love: <span id="love">100</span>%</div>
+        <div class="btn-grid">
+            <button onclick="careKitten('feed')">🍖 Feed</button>
+            <button onclick="careKitten('pet')">✋ Pet</button>
+        </div>
+    </div>
+
+    <input type="text" id="msgInput" placeholder="Write a message...">
+    <button class="ping-btn" onclick="sendCommunication()">Send Signal</button>
+    <p id="status" style="font-size: 0.7rem; margin-top: 10px;"></p>
+</div>
+
+<script>
+    let hunger = localStorage.getItem('ginHunger') || 100;
+    let love = localStorage.getItem('ginLove') || 100;
+
+    function updateKittenDisplay() {
+        document.getElementById('hunger').innerText = hunger;
+        document.getElementById('love').innerText = love;
+    }
+
+    function careKitten(type) {
+        if(type === 'feed') hunger = Math.min(100, parseInt(hunger) + 20);
+        if(type === 'pet') love = Math.min(100, parseInt(love) + 20);
+        localStorage.setItem('ginHunger', hunger);
+        localStorage.setItem('ginLove', love);
+        updateKittenDisplay();
+    }
+
+    function sendCommunication() {
+        const currentUser = document.getElementById('userSelect').value;
+        const msg = document.getElementById('msgInput').value;
+        const status = document.getElementById('status');
+        
+        // 1. DYNAMIC NAME LOGIC
+        // This takes "dylan" and makes it "Dylan"
+        let senderName = currentUser.charAt(0).toUpperCase() + currentUser.slice(1);
+        
+        // 2. DYNAMIC MESSAGE LOGIC
+        let finalMsg = msg ? `${senderName}: ${msg}` : `${senderName} misses you! ❤️`;
+
+        // 3. TARGETING LOGIC (Separate Tunnels)
+        // If YOU are Dylan, send to XENA'S phone. If SHE is Xena, send to DYLAN'S phone.
+        const targetTopic = (currentUser === "dylan") ? "xena_alerts_2026" : "dylan_alerts_2026";
+
+        fetch(`https://ntfy.sh/${targetTopic}`, {
+            method: 'POST',
+            body: finalMsg,
+            headers: { 'Title': 'New Heartbeat' }
+        }).then(() => {
+            status.innerText = "Signal sent to " + (currentUser === "dylan" ? "Xena" : "Dylan") + "!";
+            document.getElementById('msgInput').value = "";
+        });
+    }
+
+    updateKittenDisplay();
+</script>
+</body>
+</html>
