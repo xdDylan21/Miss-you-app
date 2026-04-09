@@ -3,112 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xena's Heart</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;600&display=swap');
-
-        body { 
-            background: linear-gradient(135deg, #064e3b 0%, #022c22 100%); 
-            display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; 
-            font-family: 'Poppins', sans-serif; color: #FDFDD0;
-        }
-        
-        .glass-panel { 
-            background: rgba(2, 44, 34, 0.8); 
-            backdrop-filter: blur(15px);
-            padding: 40px 20px; border-radius: 40px; 
-            text-align: center; width: 85%; max-width: 380px; 
-            border: 1px solid rgba(253, 253, 208, 0.2); 
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6); 
-        }
-
-        #heartBtn {
-            background: radial-gradient(circle, #10b981, #059669);
-            width: 160px; height: 160px; border-radius: 50%; border: none;
-            color: #FDFDD0; font-family: 'Dancing Script', cursive; font-size: 2rem;
-            font-weight: bold; cursor: pointer;
-            box-shadow: 0 0 30px rgba(16, 185, 129, 0.4); 
-            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            display: flex; align-items: center; justify-content: center; margin: 25px auto;
-        }
-        
-        #heartBtn:active { transform: scale(0.9); }
-        #heartBtn:disabled { background: #374151; opacity: 0.5; cursor: not-allowed; }
-
-        .app-title { font-weight: 600; font-size: 1.4rem; letter-spacing: 1px; color: #FDFDD0; }
-        .status-text { min-height: 60px; margin-top: 20px; font-size: 1rem; font-weight: 300; line-height: 1.6; color: #FDFDD0; }
-        #timer-text { font-size: 0.7rem; color: rgba(253, 253, 208, 0.5); margin-top: 10px; }
-    </style>
-</head>
-<body>
-
-<div class="glass-panel">
-    <div style="font-size: 1.5rem;">✨</div>
-    <p class="app-title">Xena's Signal</p>
-    
-    <button id="heartBtn" onclick="sendSignal()">Miss You</button>
-    
-    <div id="status-display" class="status-text">Tap to let Dylan know you're thinking of him.</div>
-    <div id="timer-text"></div>
-</div>
-
-<script>
-    // --- CHANGE THIS TO YOUR SECRET TOPIC NAME ---
-    const TOPIC_NAME = "dylan_xena_signal_2026"; 
-
-    const compliments = [
-        "Signal sent! I'm probably smiling at my phone right now. ❤️",
-        "I miss you more! That's a scientific fact.",
-        "Ping received! You're the best thing that's happened to me.",
-        "Thinking of you too, Xena. See you soon! ✨",
-        "You just made my heart skip a beat. Mission accomplished.",
-        "I love you more than words of affirmation can describe. ❤️"
-    ];
-
-    function sendSignal() {
-        const status = document.getElementById('status-display');
-        const btn = document.getElementById('heartBtn');
-        const timerText = document.getElementById('timer-text');
-
-        // The Logic: Fetch API to NTFY
-        fetch(`https://ntfy.sh/${TOPIC_NAME}`, {
-            method: 'POST',
-            body: "Xena misses you! ❤️", // This is the notification body
-            headers: {
-                'Title': 'Signal Received'
-            }
-        }).then(response => {
-            if (response.ok) {
-                const randomMsg = compliments[Math.floor(Math.random() * compliments.length)];
-                status.innerText = randomMsg;
-                
-                // Button Cooldown
-                btn.disabled = true;
-                let seconds = 60;
-                const countdown = setInterval(() => {
-                    seconds--;
-                    timerText.innerText = `Resetting in ${seconds}s...`;
-                    if (seconds <= 0) {
-                        clearInterval(countdown);
-                        btn.disabled = false;
-                        timerText.innerText = "";
-                        status.innerText = "Tap again whenever you miss him.";
-                    }
-                }, 1000);
-            }
-        }).catch(() => {
-            status.innerText = "System offline. Check connection.";
-        });
-    }
-</script>
-
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gin & Us</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;600&display=swap');
@@ -127,264 +21,36 @@
         }
 
         /* Gin the Kitten Styles */
-        .kitten-box { background: rgba(253, 253, 208, 0.1); border-radius: 20px; padding: 20px; margin-bottom: 20px; }
-        #kitten-emoji { font-size: 80px; display: block; margin: 10px 0; transition: 0.3s; }
-        .stats { font-size: 0.8rem; margin-bottom: 10px; }
+        .kitten-box { background: rgba(253, 253, 208, 0.1); border-radius: 20px; padding: 20px; margin-bottom: 20px; border: 1px dashed #FFA500; }
+        #kitten-emoji { font-size: 80px; display: block; margin: 10px 0; color: #FFA500; transition: 0.3s; }
+        .stats { font-size: 0.8rem; margin-bottom: 15px; color: #FDFDD0; }
         
         /* Buttons */
         .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        button { 
-            background: #10b981; color: #FDFDD0; border: none; padding: 12px; 
-            border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 0.9rem;
+        .care-btn { background: #10b981; color: #FDFDD0; border: none; padding: 12px; border-radius: 12px; font-weight: 600; cursor: pointer; }
+        .care-btn:active { transform: scale(0.95); }
+        
+        .ping-btn { 
+            background: #FDFDD0; color: #064e3b; width: 100%; margin-top: 15px; 
+            font-family: 'Dancing Script', cursive; font-size: 1.6rem; border: none; 
+            padding: 10px; border-radius: 15px; cursor: pointer;
         }
-        button:active { transform: scale(0.95); }
-        .ping-btn { background: #FDFDD0; color: #064e3b; width: 100%; margin-top: 10px; font-family: 'Dancing Script', cursive; font-size: 1.5rem; }
+        .ping-btn:active { transform: scale(0.98); }
 
-        /* Messaging */
+        /* Inputs & Controls */
         input { 
-            width: 80%; background: rgba(253, 253, 208, 0.1); border: 1px solid #FDFDD0; 
-            padding: 10px; border-radius: 10px; color: #FDFDD0; margin-top: 10px;
+            width: 90%; background: rgba(253, 253, 208, 0.1); border: 1px solid #FDFDD0; 
+            padding: 12px; border-radius: 12px; color: #FDFDD0; margin-top: 10px; text-align: center;
         }
-        .user-select { margin-bottom: 15px; font-size: 0.8rem; }
-        select { background: transparent; color: #FDFDD0; border: 1px solid #FDFDD0; border-radius: 5px; }
-    </style>
-</head>
-<body>
-
-<div class="app-container">
-    <div class="user-select">
-        I am: <select id="userSelect"><option value="xena">Xena</option><option value="dylan">Dylan</option></select>
-    </div>
-
-    <div class="kitten-box">
-        <span id="kitten-emoji">🐈‍⬛</span>
-        <h2 style="margin:0; color:#FFA500;">Gin</h2>
-        <div class="stats">Hunger: <span id="hunger">100</span>% | Love: <span id="love">100</span>%</div>
-        <div class="btn-grid">
-            <button onclick="careKitten('feed')">🍖 Feed Gin</button>
-            <button onclick="careKitten('pet')">✋ Pet Gin</button>
-        </div>
-    </div>
-
-    <input type="text" id="msgInput" placeholder="Type a message...">
-    <button class="ping-btn" onclick="sendCommunication()">Send Signal</button>
-    <p id="status" style="font-size: 0.7rem; margin-top: 10px;"></p>
-</div>
-
-<script>
-    // 1. Kitten Logic (Local Storage)
-    let hunger = localStorage.getItem('ginHunger') || 100;
-    let love = localStorage.getItem('ginLove') || 100;
-
-    function updateKittenDisplay() {
-        document.getElementById('hunger').innerText = hunger;
-        document.getElementById('love').innerText = love;
-        const emoji = document.getElementById('kitten-emoji');
-        // Orange Kitten logic
-        emoji.innerText = "🐈"; 
-        emoji.style.color = "#FFA500"; 
-        if (hunger < 30) emoji.innerText = "😿";
-    }
-
-    function careKitten(type) {
-        if(type === 'feed') hunger = Math.min(100, parseInt(hunger) + 20);
-        if(type === 'pet') love = Math.min(100, parseInt(love) + 20);
-        localStorage.setItem('ginHunger', hunger);
-        localStorage.setItem('ginLove', love);
-        updateKittenDisplay();
-        document.getElementById('status').innerText = "Gin is happy! ✨";
-    }
-
-    // 2. Messaging & Ping Logic
-    function sendCommunication() {
-        const user = document.getElementById('userSelect').value;
-        const msg = document.getElementById('msgInput').value;
-        const status = document.getElementById('status');
-        
-        // If message is empty, it's just a "Miss You" ping
-        const finalMsg = msg ? `${user.toUpperCase()}: ${msg}` : `${user.toUpperCase()} misses you! ❤️`;
-        const targetTopic = (user === "xena") ? "dylan_alerts_2026" : "xena_alerts_2026";
-
-        fetch(`https://ntfy.sh/${targetTopic}`, {
-            method: 'POST',
-            body: finalMsg,
-            headers: { 'Title': 'New Heartbeat' }
-        }).then(() => {
-            status.innerText = "Message & Heartbeat Sent!";
-            document.getElementById('msgInput').value = "";
-        });
-    }
-
-    // Auto-decrease hunger over time (Simulation)
-    setInterval(() => {
-        hunger = Math.max(0, hunger - 1);
-        updateKittenDisplay();
-    }, 60000); // Drops 1% every minute
-
-    updateKittenDisplay();
-</script>
-
-</body>
-</html>
-<script>
-    // 1. Kitten Logic (Local Storage)
-    // This saves Gin's stats on your specific phone
-    let hunger = localStorage.getItem('ginHunger') || 100;
-    let love = localStorage.getItem('ginLove') || 100;
-
-    function updateKittenDisplay() {
-        document.getElementById('hunger').innerText = hunger;
-        document.getElementById('love').innerText = love;
-        const emoji = document.getElementById('kitten-emoji');
-        
-        // Orange Kitten (Gin)
-        emoji.innerText = "🐈"; 
-        emoji.style.color = "#FFA500"; 
-        
-        if (hunger < 30) {
-            emoji.innerText = "😿"; // Gin gets sad when hungry
-        }
-    }
-
-    function careKitten(type) {
-        if(type === 'feed') hunger = Math.min(100, parseInt(hunger) + 20);
-        if(type === 'pet') love = Math.min(100, parseInt(love) + 20);
-        
-        localStorage.setItem('ginHunger', hunger);
-        localStorage.setItem('ginLove', love);
-        updateKittenDisplay();
-        document.getElementById('status').innerText = "Gin purrs... ✨";
-    }
-
-    // 2. FIXED Messaging & Ping Logic
-    function sendCommunication() {
-        const userSelect = document.getElementById('userSelect');
-        const currentUser = userSelect.value; // Checks if Dylan or Xena is selected
-        const msgInput = document.getElementById('msgInput');
-        const status = document.getElementById('status');
-        
-        // This is the fix: It creates the message based on who is selected
-        let name = currentUser.charAt(0).toUpperCase() + currentUser.slice(1);
-        let finalMsg = msgInput.value ? `${name}: ${msgInput.value}` : `${name} misses you! ❤️`;
-
-        // Logic: Send to the OTHER person's topic
-        // If Dylan sends it, it goes to Xena's alerts. If Xena sends it, it goes to Dylan's.
-        const targetTopic = (currentUser === "xena") ? "dylan_alerts_2026" : "xena_alerts_2026";
-
-        fetch(`https://ntfy.sh/${targetTopic}`, {
-            method: 'POST',
-            body: finalMsg,
-            headers: { 'Title': 'New Signal' }
-        }).then(response => {
-            if (response.ok) {
-                status.innerText = "Signal Sent to " + (currentUser === "xena" ? "Dylan" : "Xena") + "! ❤️";
-                msgInput.value = ""; // Clears the box
-            }
-        }).catch(() => {
-            status.innerText = "Error: Check your internet.";
-        });
-    }
-
-    // Hunger simulation: Gin gets a bit hungrier every 2 minutes
-    setInterval(() => {
-        hunger = Math.max(0, hunger - 1);
-        updateKittenDisplay();
-    }, 120000);
-
-    updateKittenDisplay();
-</script>
-<script>
-    // 1. Kitten Logic (Local Storage)
-    // This saves Gin's stats on your specific phone
-    let hunger = localStorage.getItem('ginHunger') || 100;
-    let love = localStorage.getItem('ginLove') || 100;
-
-    function updateKittenDisplay() {
-        document.getElementById('hunger').innerText = hunger;
-        document.getElementById('love').innerText = love;
-        const emoji = document.getElementById('kitten-emoji');
-        
-        // Orange Kitten (Gin)
-        emoji.innerText = "🐈"; 
-        emoji.style.color = "#FFA500"; 
-        
-        if (hunger < 30) {
-            emoji.innerText = "😿"; // Gin gets sad when hungry
-        }
-    }
-
-    function careKitten(type) {
-        if(type === 'feed') hunger = Math.min(100, parseInt(hunger) + 20);
-        if(type === 'pet') love = Math.min(100, parseInt(love) + 20);
-        
-        localStorage.setItem('ginHunger', hunger);
-        localStorage.setItem('ginLove', love);
-        updateKittenDisplay();
-        document.getElementById('status').innerText = "Gin purrs... ✨";
-    }
-
-    // 2. FIXED Messaging & Ping Logic
-    function sendCommunication() {
-        const userSelect = document.getElementById('userSelect');
-        const currentUser = userSelect.value; // Checks if Dylan or Xena is selected
-        const msgInput = document.getElementById('msgInput');
-        const status = document.getElementById('status');
-        
-        // This is the fix: It creates the message based on who is selected
-        let name = currentUser.charAt(0).toUpperCase() + currentUser.slice(1);
-        let finalMsg = msgInput.value ? `${name}: ${msgInput.value}` : `${name} misses you! ❤️`;
-
-        // Logic: Send to the OTHER person's topic
-        // If Dylan sends it, it goes to Xena's alerts. If Xena sends it, it goes to Dylan's.
-        const targetTopic = (currentUser === "xena") ? "dylan_alerts_2026" : "xena_alerts_2026";
-
-        fetch(`https://ntfy.sh/${targetTopic}`, {
-            method: 'POST',
-            body: finalMsg,
-            headers: { 'Title': 'New Signal' }
-        }).then(response => {
-            if (response.ok) {
-                status.innerText = "Signal Sent to " + (currentUser === "xena" ? "Dylan" : "Xena") + "! ❤️";
-                msgInput.value = ""; // Clears the box
-            }
-        }).catch(() => {
-            status.innerText = "Error: Check your internet.";
-        });
-    }
-
-    // Hunger simulation: Gin gets a bit hungrier every 2 minutes
-    setInterval(() => {
-        hunger = Math.max(0, hunger - 1);
-        updateKittenDisplay();
-    }, 120000);
-
-    updateKittenDisplay();
-</script>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gin & Us</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;600&display=swap');
-        body { background: linear-gradient(135deg, #064e3b 0%, #022c22 100%); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; font-family: 'Poppins', sans-serif; color: #FDFDD0; }
-        .app-container { background: rgba(2, 44, 34, 0.85); backdrop-filter: blur(15px); padding: 30px 20px; border-radius: 40px; text-align: center; width: 85%; max-width: 400px; border: 1px solid rgba(253, 253, 208, 0.2); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6); }
-        .kitten-box { background: rgba(253, 253, 208, 0.1); border-radius: 20px; padding: 20px; margin-bottom: 20px; }
-        #kitten-emoji { font-size: 80px; display: block; margin: 10px 0; color: #FFA500; }
-        .stats { font-size: 0.8rem; margin-bottom: 10px; }
-        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        button { background: #10b981; color: #FDFDD0; border: none; padding: 12px; border-radius: 12px; font-weight: 600; cursor: pointer; }
-        .ping-btn { background: #FDFDD0; color: #064e3b; width: 100%; margin-top: 10px; font-family: 'Dancing Script', cursive; font-size: 1.5rem; }
-        input { width: 85%; background: rgba(253, 253, 208, 0.1); border: 1px solid #FDFDD0; padding: 10px; border-radius: 10px; color: #FDFDD0; margin-top: 10px; text-align: center; }
-        .user-select { margin-bottom: 15px; font-size: 0.9rem; font-weight: 600; }
+        .user-toggle { margin-bottom: 20px; font-size: 0.9rem; font-weight: 600; }
         select { background: #064e3b; color: #FDFDD0; border: 1px solid #FDFDD0; padding: 5px 10px; border-radius: 8px; }
+        #status { font-size: 0.75rem; margin-top: 12px; min-height: 20px; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    <div class="user-select">
+    <div class="user-toggle">
         I am: 
         <select id="userSelect">
             <option value="dylan">Dylan</option>
@@ -397,60 +63,23 @@
         <h2 style="margin:0; color:#FFA500;">Gin</h2>
         <div class="stats">Hunger: <span id="hunger">100</span>% | Love: <span id="love">100</span>%</div>
         <div class="btn-grid">
-            <button onclick="careKitten('feed')">🍖 Feed</button>
-            <button onclick="careKitten('pet')">✋ Pet</button>
+            <button class="care-btn" onclick="careKitten('feed')">🍖 Feed</button>
+            <button class="care-btn" onclick="careKitten('pet')">✋ Pet</button>
         </div>
     </div>
 
-    <input type="text" id="msgInput" placeholder="Write a message...">
-    <button class="ping-btn" onclick="sendCommunication()">Send Signal</button>
-    <p id="status" style="font-size: 0.7rem; margin-top: 10px;"></p>
+    <input type="text" id="msgInput" placeholder="Write a message for her...">
+    <button class="ping-btn" onclick="sendCommunication()">Send Signal ❤️</button>
+    <p id="status"></p>
 </div>
 
 <script>
+    // --- KITTEN LOGIC ---
     let hunger = localStorage.getItem('ginHunger') || 100;
     let love = localStorage.getItem('ginLove') || 100;
 
     function updateKittenDisplay() {
         document.getElementById('hunger').innerText = hunger;
         document.getElementById('love').innerText = love;
-    }
-
-    function careKitten(type) {
-        if(type === 'feed') hunger = Math.min(100, parseInt(hunger) + 20);
-        if(type === 'pet') love = Math.min(100, parseInt(love) + 20);
-        localStorage.setItem('ginHunger', hunger);
-        localStorage.setItem('ginLove', love);
-        updateKittenDisplay();
-    }
-
-    function sendCommunication() {
-        const currentUser = document.getElementById('userSelect').value;
-        const msg = document.getElementById('msgInput').value;
-        const status = document.getElementById('status');
-        
-        // 1. DYNAMIC NAME LOGIC
-        // This takes "dylan" and makes it "Dylan"
-        let senderName = currentUser.charAt(0).toUpperCase() + currentUser.slice(1);
-        
-        // 2. DYNAMIC MESSAGE LOGIC
-        let finalMsg = msg ? `${senderName}: ${msg}` : `${senderName} misses you! ❤️`;
-
-        // 3. TARGETING LOGIC (Separate Tunnels)
-        // If YOU are Dylan, send to XENA'S phone. If SHE is Xena, send to DYLAN'S phone.
-        const targetTopic = (currentUser === "dylan") ? "xena_alerts_2026" : "dylan_alerts_2026";
-
-        fetch(`https://ntfy.sh/${targetTopic}`, {
-            method: 'POST',
-            body: finalMsg,
-            headers: { 'Title': 'New Heartbeat' }
-        }).then(() => {
-            status.innerText = "Signal sent to " + (currentUser === "dylan" ? "Xena" : "Dylan") + "!";
-            document.getElementById('msgInput').value = "";
-        });
-    }
-
-    updateKittenDisplay();
-</script>
-</body>
-</html>
+        const emoji = document.getElementById('kitten-emoji');
+        if (hunger < 30) emoji.innerText = "😿
